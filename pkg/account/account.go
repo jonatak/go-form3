@@ -6,21 +6,21 @@ type BaseCurrency string
 // Account define an account.
 type Account struct {
 	Country               Country        `json:"country"`
-	BaseCurrency          BaseCurrency   `json:"base_currency"`
-	BankID                string         `json:"bank_id"`
-	BankIDCode            string         `json:"bank_id_code"`
-	AccountNumber         string         `json:"account_number"`
-	BIC                   string         `json:"bic"`
-	IBAN                  string         `json:"iban"`
-	CustomerID            string         `json:"customer_id"`
-	Name                  [4]string      `json:"name"`
-	AlternativeNames      [3]string      `json:"alternative_names"`
-	AccountClassification Classification `json:"account_classification"`
+	BaseCurrency          BaseCurrency   `json:"base_currency,omitempty"`
+	BankID                string         `json:"bank_id,omitempty"`
+	BankIDCode            string         `json:"bank_id_code,omitempty"`
+	AccountNumber         string         `json:"account_number,omitempty"`
+	BIC                   string         `json:"bic,omitempty"`
+	IBAN                  string         `json:"iban,omitempty"`
+	CustomerID            string         `json:"customer_id,omitempty"`
+	Name                  [4]string      `json:"name,omitempty"`
+	AlternativeNames      [3]string      `json:"alternative_names,omitempty"`
+	AccountClassification Classification `json:"account_classification,omitempty"`
 	JointAccount          bool           `json:"joint_account"`
 	AccountMatchingOptOut bool           `json:"account_matching_opt_out"`
-	SecondaryIdentifier   string         `json:"secondary_identifier"`
+	SecondaryIdentifier   string         `json:"secondary_identifier,omitempty"`
 	Switched              bool           `json:"switcher"`
-	Status                Status         `json:"status"`
+	Status                Status         `json:"status,omitempty"`
 }
 
 // IsValid verify that an account is valid.
