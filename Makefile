@@ -7,5 +7,5 @@ PKG_LIST := $(shell go list ${PKG}/... | grep -v /vendor/)
 lint: ## Lint the files
 	@golint -set_exit_status ${PKG_LIST}
 
-test:
+unit-test:
 	go test -v -cover ${PKG_LIST}
