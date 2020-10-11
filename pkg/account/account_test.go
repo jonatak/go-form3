@@ -22,7 +22,7 @@ func TestAccountValidation(t *testing.T) {
 		ar := &Account{
 			Country: "FRA",
 		}
-		assertReturnedError(t, ar.IsValid(), ErrFieldInvalid)
+		assertReturnedError(t, ar.IsValid(), ErrInvalidCountry)
 	})
 
 	t.Run("Account validation with valid country shouldn't return error", func(t *testing.T) {

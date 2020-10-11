@@ -1,8 +1,5 @@
 package account
 
-// Country define a specific type for country for further validation.
-type Country string
-
 // BaseCurrency define a specific type for BaseCurrency for further validation.
 type BaseCurrency string
 
@@ -34,10 +31,10 @@ func (r *Account) IsValid() error {
 			Err:   ErrFieldMandatory,
 		}
 	}
-	if len(r.Country) != 2 {
+	if err := r.Country.IsValid(); err != nil {
 		return &InvalidAccountError{
 			Field: "Country",
-			Err:   ErrFieldInvalid,
+			Err:   err,
 		}
 	}
 	if r.BaseCurrency != "" && len(r.BaseCurrency) != 3 {
