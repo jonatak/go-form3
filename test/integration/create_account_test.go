@@ -30,8 +30,19 @@ func getAccountResource() (string, *account.Account) {
 		BankIDCode:   "GBDSC",
 		BIC:          "NWBKGB22",
 	}
+	return accountID, account
+}
 
-	createResponse, err := client.Account.Create(accountId, account)
+func TestCreateAccount(t *testing.T) {
+
+	form3Endpoint := os.Getenv("FORM3_ENDPOINT")
+	form3OrdID := os.Getenv("FORM3_ORG_ID")
+
+	client := form3.New(form3OrdID, form3Endpoint)
+
+	accountID, account := getAccountResource()
+
+	createResponse, err := client.Account.Create(accountID, account)
 
 	assert.Nil(t, err)
 
@@ -39,7 +50,7 @@ func getAccountResource() (string, *account.Account) {
 
 	assert.NotEmpty(t, createResponse.Data)
 	assert.Equal(t, createResponse.Data.OrganisationID, form3OrdID)
-	assert.Equal(t, createResponse.Data.ID, accountId)
+	assert.Equal(t, createResponse.Data.ID, accountID)
 	assert.Equal(t, createResponse.Data.Version, 0)
 
 	assert.Equal(t, createResponse.Data.Attributes, account)
