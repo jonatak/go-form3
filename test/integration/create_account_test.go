@@ -27,12 +27,26 @@ func TestCreateAccount(t *testing.T) {
 	form3OrdID := os.Getenv("FORM3_ORG_ID")
 
 	client := form3.New(form3OrdID, form3Endpoint)
-	_, err := client.Account.Create("ad27e265-9605-4b4b-a0e5-3003ea9cc4dd", &account.Account{
+
+	accountId := "ad27e265-9605-4b4b-a0e5-3003ea9cc4dd"
+	account := &account.Account{
 		Country:      "GB",
 		BaseCurrency: "GBP",
 		BankID:       "400300",
 		BankIDCode:   "GBDSC",
 		BIC:          "NWBKGB22",
-	})
-	assert.NotEmpty(t, err, err.Error())
+	}
+
+	createResponse, err := client.Account.Create(accountId, account)
+
+	assert.Nil(t, err)
+
+	assert.NotEmpty(t, createResponse.Links.Self)
+
+	assert.NotEmpty(t, createResponse.Data)
+	assert.Equal(t, createResponse.Data.OrganisationID, form3OrdID)
+	assert.Equal(t, createResponse.Data.ID, accountId)
+	assert.Equal(t, createResponse.Data.Version, 0)
+
+	assert.Equal(t, createResponse.Data.Attributes, account)
 }
