@@ -8,10 +8,12 @@ lint: ## Lint the files
 	@golint -set_exit_status ${PKG_LIST}
 
 unit-test: ## Run unit test
-	go test -v -cover --tags=unit ./...
+	@go test -v -cover --tags=unit ${PKG_LIST}
 
 integration-test: ## Run integration test
-	go test -v -cover --tags=integration ./...
+	@docker-compose up -d -V postgresql vault accountapi
+	@docker-compose run integration-test
+	@docker-compose down -v
 
 help: ## Display this help screen
 	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
