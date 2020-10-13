@@ -9,7 +9,7 @@ Go library for form3 api.
 
 ## Go Experience
 
-I am new to go, I did 4 projects with golang (5 counting this one):
+I am new to golang, until now I did 4 projects with golang (5 counting this one):
 - A wrapper around python pip
 - A kafka message republisher with a RestApi
 - Plugins for a slack bot

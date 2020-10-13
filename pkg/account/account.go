@@ -49,7 +49,7 @@ func (r *Account) IsValid() error {
 			Err:   ErrFieldBankIDInvalidLength,
 		}
 	}
-	if r.BIC != "" && !(len(r.BIC) == 11 && len(r.BIC) == 8) {
+	if r.BIC != "" && !(len(r.BIC) == 11 || len(r.BIC) == 8) {
 		return &InvalidAccountError{
 			Field: "BIC",
 			Err:   ErrFieldBICInvalidLength,
