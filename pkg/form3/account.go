@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/jonatak/go-form3/pkg/account"
 )
@@ -13,30 +12,6 @@ import (
 // AccountEndpoint for all account resources methods.
 type AccountEndpoint struct {
 	*config
-}
-
-// AccountResource define the message structure for account request and response.
-type AccountResource struct {
-	Type           string           `json:"type"`
-	ID             string           `json:"id"`
-	OrganisationID string           `json:"organisation_id"`
-	Version        int              `json:"version,omitempty"`
-	CreatedOn      time.Time        `json:"created_on,omitempty"`
-	ModifiedOn     time.Time        `json:"modified_on,omitempty"`
-	Attributes     *account.Account `json:"attributes"`
-}
-
-// CreateAccountRequest define the structure for account creation request.
-type CreateAccountRequest struct {
-	Data AccountResource `json:"data"`
-}
-
-// CreateAccountResponse define the structure for account creation response.
-type CreateAccountResponse struct {
-	Data  AccountResource `json:"data"`
-	Links struct {
-		Self string `json:"self"`
-	}
 }
 
 // APIError define error message returned by form3 api.
@@ -59,13 +34,13 @@ func (a *APIError) Unwrap() error {
 }
 
 // Create an account.
-func (ae *AccountEndpoint) Create(AccountID string, ac *account.Account) (*CreateAccountResponse, error) {
+func (ae *AccountEndpoint) Create(AccountID string, ac *account.Account) (*account.CreateResponse, error) {
 	if err := ac.IsValid(); err != nil {
 		return nil, err
 	}
 
-	request := &CreateAccountRequest{
-		Data: AccountResource{
+	request := &account.CreateRequest{
+		Data: account.Resource{
 			Type:           "accounts",
 			ID:             AccountID,
 			OrganisationID: ae.OrganisationID,
@@ -97,7 +72,7 @@ func (ae *AccountEndpoint) Create(AccountID string, ac *account.Account) (*Creat
 	switch resp.StatusCode {
 
 	case 201:
-		response := CreateAccountResponse{}
+		response := account.CreateResponse{}
 		json.NewDecoder(resp.Body).Decode(&response)
 		return &response, nil
 

@@ -1,5 +1,7 @@
 package account
 
+import "time"
+
 // BaseCurrency define a specific type for BaseCurrency for further validation.
 type BaseCurrency string
 
@@ -21,6 +23,30 @@ type Account struct {
 	SecondaryIdentifier   string         `json:"secondary_identifier,omitempty"`
 	Switched              bool           `json:"switcher"`
 	Status                Status         `json:"status,omitempty"`
+}
+
+// Resource define the message structure for account request and response.
+type Resource struct {
+	Type           string    `json:"type"`
+	ID             string    `json:"id"`
+	OrganisationID string    `json:"organisation_id"`
+	Version        int       `json:"version,omitempty"`
+	CreatedOn      time.Time `json:"created_on,omitempty"`
+	ModifiedOn     time.Time `json:"modified_on,omitempty"`
+	Attributes     *Account  `json:"attributes"`
+}
+
+// CreateRequest define the structure for account creation request.
+type CreateRequest struct {
+	Data Resource `json:"data"`
+}
+
+// CreateResponse define the structure for account creation response.
+type CreateResponse struct {
+	Data  Resource `json:"data"`
+	Links struct {
+		Self string `json:"self"`
+	}
 }
 
 // IsValid verify that an account is valid.
