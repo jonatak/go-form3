@@ -41,8 +41,8 @@ type CreateRequest struct {
 	Data Resource `json:"data"`
 }
 
-// CreateResponse define the structure for account creation response.
-type CreateResponse struct {
+// Response define the structure for account creation response.
+type Response struct {
 	Data  Resource `json:"data"`
 	Links struct {
 		Self string `json:"self"`

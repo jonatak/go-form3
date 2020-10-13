@@ -40,7 +40,7 @@ func (ae *AccountEndpoint) doRequest(req *http.Request) (*http.Response, error) 
 }
 
 // Create an account.
-func (ae *AccountEndpoint) Create(AccountID string, ac *account.Account) (*account.CreateResponse, error) {
+func (ae *AccountEndpoint) Create(accountID string, ac *account.Account) (*account.Response, error) {
 	if err := ac.IsValid(); err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func (ae *AccountEndpoint) Create(AccountID string, ac *account.Account) (*accou
 	request := &account.CreateRequest{
 		Data: account.Resource{
 			Type:           "accounts",
-			ID:             AccountID,
+			ID:             accountID,
 			OrganisationID: ae.OrganisationID,
 			Version:        0,
 			Attributes:     ac,
@@ -76,7 +76,7 @@ func (ae *AccountEndpoint) Create(AccountID string, ac *account.Account) (*accou
 	switch resp.StatusCode {
 
 	case 201:
-		response := account.CreateResponse{}
+		response := account.Response{}
 		json.NewDecoder(resp.Body).Decode(&response)
 		return &response, nil
 
