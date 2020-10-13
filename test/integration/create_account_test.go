@@ -55,3 +55,26 @@ func TestCreateAccount(t *testing.T) {
 
 	assert.Equal(t, createResponse.Data.Attributes, account)
 }
+
+func TestFetchAccount(t *testing.T) {
+
+	form3Endpoint := os.Getenv("FORM3_ENDPOINT")
+	form3OrdID := os.Getenv("FORM3_ORG_ID")
+
+	client := form3.New(form3OrdID, form3Endpoint)
+
+	accountID, account := getAccountResource()
+
+	response, err := client.Account.Fetch(accountID)
+
+	assert.Nil(t, err)
+
+	assert.NotEmpty(t, response.Links.Self)
+
+	assert.NotEmpty(t, response.Data)
+	assert.Equal(t, response.Data.OrganisationID, form3OrdID)
+	assert.Equal(t, response.Data.ID, accountID)
+	assert.Equal(t, response.Data.Version, 0)
+
+	assert.Equal(t, response.Data.Attributes, account)
+}

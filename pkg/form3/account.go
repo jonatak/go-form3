@@ -88,3 +88,36 @@ func (ae *AccountEndpoint) Create(accountID string, ac *account.Account) (*accou
 		return nil, &err
 	}
 }
+
+// Fetch an account.
+// This will return (nil, nil) in case the resources isn't found.
+func (ae *AccountEndpoint) Fetch(accountID string) (*account.Response, error) {
+
+	resp, err := http.Get(fmt.Sprintf("%s/v1/organisation/accounts/%s", ae.URL, accountID))
+	if err != nil {
+		return nil, &APIError{Err: err}
+	}
+
+	if err != nil {
+		return nil, &APIError{Err: err}
+	}
+
+	defer resp.Body.Close()
+
+	response := account.Response{}
+
+	switch resp.StatusCode {
+
+	case 200:
+		json.NewDecoder(resp.Body).Decode(&response)
+		return &response, nil
+	case 404:
+		return nil, nil
+	default:
+		err := APIError{
+			StatusCode: resp.StatusCode,
+		}
+		json.NewDecoder(resp.Body).Decode(&err)
+		return nil, &err
+	}
+}
