@@ -121,3 +121,30 @@ func (ae *AccountEndpoint) Fetch(accountID string) (*account.Response, error) {
 		return nil, &err
 	}
 }
+
+// Delete an account.
+func (ae *AccountEndpoint) Delete(accountID string, version int) (int, error) {
+
+	req, err := http.NewRequest(
+		"DELETE", fmt.Sprintf("%s/v1/organisation/accounts/%s",
+			ae.URL, accountID),
+		nil,
+	)
+	if err != nil {
+		return 0, &APIError{Err: err}
+	}
+
+	q := req.URL.Query()
+	q.Add("version", fmt.Sprintf("%d", version))
+	req.URL.RawQuery = q.Encode()
+	fmt.Println(req.URL.String())
+	resp, err := ae.doRequest(req)
+
+	if err != nil {
+		return 0, &APIError{Err: err}
+	}
+
+	defer resp.Body.Close()
+
+	return resp.StatusCode, nil
+}

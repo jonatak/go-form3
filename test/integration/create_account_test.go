@@ -78,3 +78,18 @@ func TestFetchAccount(t *testing.T) {
 
 	assert.Equal(t, response.Data.Attributes, account)
 }
+
+func TestDeleteAccount(t *testing.T) {
+
+	form3Endpoint := os.Getenv("FORM3_ENDPOINT")
+	form3OrdID := os.Getenv("FORM3_ORG_ID")
+
+	client := form3.New(form3OrdID, form3Endpoint)
+
+	accountID, _ := getAccountResource()
+
+	responseCode, err := client.Account.Delete(accountID, 0)
+
+	assert.Nil(t, err)
+	assert.Equal(t, responseCode, 204)
+}
