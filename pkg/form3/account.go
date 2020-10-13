@@ -33,6 +33,12 @@ func (a *APIError) Unwrap() error {
 	return a.Err
 }
 
+func (ae *AccountEndpoint) doRequest(req *http.Request) (*http.Response, error) {
+	req.Header.Set("Accept", httpAccept)
+	req.Header.Set("Content-Type", httpContentType)
+	return ae.client.Do(req)
+}
+
 // Create an account.
 func (ae *AccountEndpoint) Create(AccountID string, ac *account.Account) (*account.CreateResponse, error) {
 	if err := ac.IsValid(); err != nil {
@@ -59,9 +65,7 @@ func (ae *AccountEndpoint) Create(AccountID string, ac *account.Account) (*accou
 		return nil, &APIError{Err: err}
 	}
 
-	req.Header.Set("Accept", httpAccept)
-	req.Header.Set("Content-Type", httpContentType)
-	resp, err := ae.client.Do(req)
+	resp, err := ae.doRequest(req)
 
 	if err != nil {
 		return nil, &APIError{Err: err}
