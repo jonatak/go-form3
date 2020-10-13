@@ -9,21 +9,16 @@ import (
 
 	"github.com/jonatak/go-form3/pkg/account"
 	"github.com/jonatak/go-form3/pkg/form3"
+	"github.com/stretchr/testify/assert"
 )
-
-func assertNotEmpty(t *testing.T, v, msg string) {
-	if v == "" {
-		t.Error(msg)
-	}
-}
 
 func TestEnvSetUP(t *testing.T) {
 
 	form3Endpoint := os.Getenv("FORM3_ENDPOINT")
 	form3OrdID := os.Getenv("FORM3_ORG_ID")
 
-	assertNotEmpty(t, form3Endpoint, "FORM3_ENDPOINT env var should be present.")
-	assertNotEmpty(t, form3OrdID, "FORM3_ORG_ID env var should be present.")
+	assert.NotEmpty(t, form3Endpoint, "FORM3_ENDPOINT env var should be present.")
+	assert.NotEmpty(t, form3OrdID, "FORM3_ORG_ID env var should be present.")
 }
 
 func TestCreateAccount(t *testing.T) {
@@ -39,10 +34,5 @@ func TestCreateAccount(t *testing.T) {
 		BankIDCode:   "GBDSC",
 		BIC:          "NWBKGB22",
 	})
-	if err != nil {
-		t.Error(err)
-	}
-	if client == nil {
-		t.Error("Client point is empty")
-	}
+	assert.NotEmpty(t, err, err.Error())
 }

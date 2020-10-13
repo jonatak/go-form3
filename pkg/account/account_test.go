@@ -4,13 +4,14 @@ package account
 
 import (
 	"errors"
+	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func assertReturnedError(t *testing.T, got, want error) {
-	if !errors.Is(got, want) {
-		t.Errorf("got %s, want %s", got, want)
-	}
+	assert.True(t, errors.Is(got, want), fmt.Sprintf("got %s, want %s", got, want))
 }
 
 func TestAccountValidation(t *testing.T) {
