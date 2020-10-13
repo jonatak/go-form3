@@ -47,6 +47,8 @@ services:
       driver: none
   integration-test:
     build: .
+    volumes:
+      - .:/src/
     environment:
       - FORM3_ENDPOINT=http://accountapi:8080
       - FORM3_ORG_ID=eb0bd6f5-c3f5-44b2-b677-acd23cdde73c

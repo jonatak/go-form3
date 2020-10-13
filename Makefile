@@ -2,7 +2,11 @@ PROJECT_NAME := go-form3
 PKG := "github.com/jonatak/$(PROJECT_NAME)"
 PKG_LIST := $(shell go list ${PKG}/... | grep -v /vendor/)
 
-.PHONY: all lint unit-test
+.PHONY: all dep lint unit-test integration-test
+
+dep: ## Get dependencies
+	@go get golang.org/x/lint/golint
+	@go get -v -d ./...
 
 lint: ## Lint the files
 	@golint -set_exit_status ${PKG_LIST}
