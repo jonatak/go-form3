@@ -40,13 +40,13 @@ func (ae *AccountEndpoint) doRequest(req *http.Request) (*http.Response, error) 
 }
 
 // Create an account.
-func (ae *AccountEndpoint) Create(accountID string, ac *account.Account) (*account.Response, error) {
+func (ae *AccountEndpoint) Create(accountID string, ac *account.Account) (*AccountResponse, error) {
 	if err := ac.IsValid(); err != nil {
 		return nil, err
 	}
 
-	request := &account.CreateRequest{
-		Data: account.Resource{
+	request := &createAccountRequest{
+		Data: AccountResource{
 			Type:           "accounts",
 			ID:             accountID,
 			OrganisationID: ae.OrganisationID,
@@ -76,7 +76,7 @@ func (ae *AccountEndpoint) Create(accountID string, ac *account.Account) (*accou
 	switch resp.StatusCode {
 
 	case 201:
-		response := account.Response{}
+		response := AccountResponse{}
 		json.NewDecoder(resp.Body).Decode(&response)
 		return &response, nil
 
@@ -91,7 +91,7 @@ func (ae *AccountEndpoint) Create(accountID string, ac *account.Account) (*accou
 
 // Fetch an account.
 // This will return (nil, nil) in case the resources isn't found.
-func (ae *AccountEndpoint) Fetch(accountID string) (*account.Response, error) {
+func (ae *AccountEndpoint) Fetch(accountID string) (*AccountResponse, error) {
 
 	resp, err := http.Get(fmt.Sprintf("%s/v1/organisation/accounts/%s", ae.URL, accountID))
 	if err != nil {
@@ -104,7 +104,7 @@ func (ae *AccountEndpoint) Fetch(accountID string) (*account.Response, error) {
 
 	defer resp.Body.Close()
 
-	response := account.Response{}
+	response := AccountResponse{}
 
 	switch resp.StatusCode {
 
