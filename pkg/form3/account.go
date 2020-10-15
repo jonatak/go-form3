@@ -39,6 +39,43 @@ func (ae *AccountEndpoint) doRequest(req *http.Request) (*http.Response, error) 
 	return ae.client.Do(req)
 }
 
+func (ae *AccountEndpoint) list(url string, pageSize int) (*AccountPageResponse, error) {
+
+	req, err := http.NewRequest(
+		"GET", url, nil,
+	)
+
+	if err != nil {
+		return nil, &APIError{Err: err}
+	}
+
+	if pageSize != 0 {
+		q := req.URL.Query()
+		q.Add("page[size]", fmt.Sprintf("%d", pageSize))
+		req.URL.RawQuery = q.Encode()
+	}
+
+	resp, err := ae.doRequest(req)
+
+	defer resp.Body.Close()
+
+	response := AccountPageResponse{}
+	switch resp.StatusCode {
+
+	case 200:
+		json.NewDecoder(resp.Body).Decode(&response)
+		return &response, nil
+	case 404:
+		return nil, nil
+	default:
+		err := APIError{
+			StatusCode: resp.StatusCode,
+		}
+		json.NewDecoder(resp.Body).Decode(&err)
+		return nil, &err
+	}
+}
+
 // Create an account.
 func (ae *AccountEndpoint) Create(accountID string, ac *account.Account) (*AccountResponse, error) {
 	if err := ac.IsValid(); err != nil {
@@ -137,7 +174,6 @@ func (ae *AccountEndpoint) Delete(accountID string, version int) (int, error) {
 	q := req.URL.Query()
 	q.Add("version", fmt.Sprintf("%d", version))
 	req.URL.RawQuery = q.Encode()
-	fmt.Println(req.URL.String())
 	resp, err := ae.doRequest(req)
 
 	if err != nil {

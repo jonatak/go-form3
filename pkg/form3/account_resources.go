@@ -29,9 +29,14 @@ type createAccountRequest struct {
 	Data AccountResource `json:"data"`
 }
 
-type Accounts struct {
-	accountEndpoint *AccountEndpoint
-	Data            []AccountResource
+// AccountPageResponse represent a paginate result of the list endpoints.
+type AccountPageResponse struct {
+	Data  []AccountResource
+	Links struct {
+		Self  string `json:"self"`
+		First string `json:"first"`
+		Last  string `json:"last"`
+		Next  string `json:"next"`
+		Prev  string `json:"prev"`
+	}
 }
-
-func (ac *Accounts) Next() {}

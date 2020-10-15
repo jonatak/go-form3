@@ -33,6 +33,10 @@ func getAccountResource() (string, *account.Account) {
 	return accountID, account
 }
 
+func getManyAccountID() []string {
+	return []string{"ad27e265-9605-4b4b-a0e5-3003ea9cc4dc", "ad27e265-9605-4b4b-a0e5-3003ea9cc4de"}
+}
+
 func TestCreateAccount(t *testing.T) {
 
 	form3Endpoint := os.Getenv("FORM3_ENDPOINT")
@@ -92,4 +96,33 @@ func TestDeleteAccount(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, responseCode, 204)
+}
+
+func TestListAccount(t *testing.T) {
+
+	form3Endpoint := os.Getenv("FORM3_ENDPOINT")
+	form3OrdID := os.Getenv("FORM3_ORG_ID")
+
+	client := form3.New(form3OrdID, form3Endpoint)
+
+	_, account := getAccountResource()
+	accountIDs := getManyAccountID()
+
+	for _, accountID := range accountIDs {
+		client.Account.Create(accountID, account)
+	}
+
+	response, err := client.Account.List(1)
+
+	assert.Nil(t, err)
+	assert.Equal(t, response.Data[0].Attributes, account)
+
+	nextPage, err := client.Account.Next(response)
+
+	assert.Nil(t, err)
+	assert.Equal(t, nextPage.Data[0].Attributes, account)
+
+	nextPage, err = client.Account.Next(nextPage)
+	assert.Nil(t, err)
+	assert.Nil(t, nextPage)
 }
