@@ -1,6 +1,6 @@
 package account
 
-// BaseCurrency define a specific type for BaseCurrency for further validation.
+// BaseCurrency define a specific type for BaseCurrency which will be use for data validation.
 type BaseCurrency string
 
 // Account define an account.

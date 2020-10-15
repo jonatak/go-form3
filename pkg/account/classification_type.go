@@ -2,7 +2,7 @@ package account
 
 import "errors"
 
-// Classification is a custom datatype to validate account_classification.
+// Classification is a custom datatype to validate account classification.
 type Classification string
 
 // Allowed AccountClassification.

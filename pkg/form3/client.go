@@ -13,7 +13,7 @@ type config struct {
 	client         *http.Client
 }
 
-// Client define the resources for form3 Api requests
+// Client define the resources for form3 Api requests.
 type Client struct {
 	Account AccountEndpoint
 }

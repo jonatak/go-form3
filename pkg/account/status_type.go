@@ -2,7 +2,7 @@ package account
 
 import "errors"
 
-// Status is a custom data type to define allowed account_status
+// Status is a custom data type to define allowed AccountStatus
 type Status string
 
 // Allowed AccountStatus
@@ -12,7 +12,7 @@ const (
 	FailedAccount    Status = "failed"
 )
 
-// ErrInvalidAccountStatus is a specific error for accountStatus validation
+// ErrInvalidAccountStatus is a specific error for AccountStatus validation
 var ErrInvalidAccountStatus = errors.New("Invalid AccountStatus")
 
 // IsValid check that an AccountStatus is valid.
