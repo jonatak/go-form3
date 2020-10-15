@@ -138,7 +138,17 @@ func TestListAccount(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, nextPage.Data[0].Attributes, account)
 
-	nextPage, err = client.Account.Next(nextPage)
+	firstPage, err := client.Account.Last(response)
+
+	assert.Nil(t, err)
+	assert.Equal(t, firstPage.Data[0].Attributes, account)
+
+	lastPage, err := client.Account.Last(response)
+
+	assert.Nil(t, err)
+	assert.Equal(t, lastPage.Data[0].Attributes, account)
+
+	nextPage, err = client.Account.Next(lastPage)
 	assert.Nil(t, err)
 	assert.Nil(t, nextPage)
 }
