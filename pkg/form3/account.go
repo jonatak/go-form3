@@ -103,7 +103,6 @@ func (ae *AccountEndpoint) Create(accountID string, ac *account.Account) (*Accou
 	}
 
 	resp, err := ae.doRequest(req)
-
 	if err != nil {
 		return nil, &APIError{Err: err}
 	}
@@ -131,10 +130,6 @@ func (ae *AccountEndpoint) Create(accountID string, ac *account.Account) (*Accou
 func (ae *AccountEndpoint) Fetch(accountID string) (*AccountResponse, error) {
 
 	resp, err := http.Get(fmt.Sprintf("%s/v1/organisation/accounts/%s", ae.URL, accountID))
-	if err != nil {
-		return nil, &APIError{Err: err}
-	}
-
 	if err != nil {
 		return nil, &APIError{Err: err}
 	}
