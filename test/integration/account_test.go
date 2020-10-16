@@ -1,3 +1,6 @@
+//+build integration
+//+build !unit
+
 package integration
 
 import (
@@ -39,10 +42,6 @@ func getManyAccountID() []string {
 
 func TestCreateAccount(t *testing.T) {
 
-	if testing.Short() {
-		t.Skip("skipping integration test")
-	}
-
 	form3Endpoint := os.Getenv("FORM3_ENDPOINT")
 	form3OrdID := os.Getenv("FORM3_ORG_ID")
 
@@ -65,10 +64,6 @@ func TestCreateAccount(t *testing.T) {
 }
 
 func TestFetchAccount(t *testing.T) {
-
-	if testing.Short() {
-		t.Skip("skipping integration test")
-	}
 
 	form3Endpoint := os.Getenv("FORM3_ENDPOINT")
 	form3OrdID := os.Getenv("FORM3_ORG_ID")
@@ -93,10 +88,6 @@ func TestFetchAccount(t *testing.T) {
 
 func TestDeleteAccount(t *testing.T) {
 
-	if testing.Short() {
-		t.Skip("skipping integration test")
-	}
-
 	form3Endpoint := os.Getenv("FORM3_ENDPOINT")
 	form3OrdID := os.Getenv("FORM3_ORG_ID")
 
@@ -111,10 +102,6 @@ func TestDeleteAccount(t *testing.T) {
 }
 
 func TestListAccount(t *testing.T) {
-
-	if testing.Short() {
-		t.Skip("skipping integration test")
-	}
 
 	form3Endpoint := os.Getenv("FORM3_ENDPOINT")
 	form3OrdID := os.Getenv("FORM3_ORG_ID")

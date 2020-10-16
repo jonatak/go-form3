@@ -12,11 +12,11 @@ lint: ## Lint the files
 	@golint -set_exit_status ${PKG_LIST}
 
 unit-test: ## Run only unit test
-	@go test -v -cover -short ${PKG_LIST}
+	@go test -v -cover --tags=unit ${PKG_LIST}
 
-tests: ## Run all test
+integration-test: ## Run integration test
 	@docker-compose up -d -V postgresql vault accountapi
-	@docker-compose run tests
+	@docker-compose run integration-test
 	@docker-compose down -v
 
 help: ## Display this help screen
