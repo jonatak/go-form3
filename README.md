@@ -25,6 +25,8 @@ but I though that having a separate package made more sense as I want to be able
 
 I decided to use build flags to separate unit and integration test.
 
+There isn't any uuid generation, I let the user decide how he will generate it.
+
 ## Run Unit Test
 
 ```bash
@@ -52,7 +54,7 @@ func main() {
 
     // Create an account
 
-    accountId := "ad27e265-9605-4b4b-a0e5-3003ea9cc4dd"
+    accountId := "ad27e265-9605-4b4b-a0e5-3003ea9cc4dd" // you should use a valid uuid as an id.
     account := &account.Account{
 		Country:      "GB",
 		BaseCurrency: "GBP",
@@ -61,7 +63,7 @@ func main() {
 		BIC:          "NWBKGB22",
     }
 
-    response, err := client.Account.Create("ad27e265-9605-4b4b-a0e5-3003ea9cc4dd", )
+    response, err := client.Account.Create(accountId, account)
 
     // Fetch Account
     response, err := client.Account.Fetch(accountID)
