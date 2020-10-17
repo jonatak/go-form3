@@ -9,7 +9,7 @@ Go library for form3 api.
 
 ## Go Experience
 
-I am new to golang, until now, I did 4 projects with golang (5 counting this one):
+I am new to golang. So far, I've done 4 projects with golang (5 counting this one):
 - A wrapper around python pip
 - A kafka message republisher with a RestApi
 - Plugins for a slack bot
@@ -20,8 +20,8 @@ I am new to golang, until now, I did 4 projects with golang (5 counting this one
 I decided to stick with the standard library for unit and integration testing, I only included
 testify for assert.
 
-I choose to put the integration test in his own package, I don't know what is the best practice with the go community regarding this,
-but I though that having a separate package made more sense as I want to be able to test the library the same way an user will use it.
+I choose to put the integration test in its own package, I don't know what the best practice within the Go community,
+but I though that having a separate package made more sense as I want to be able to test the library the same way a user will use it.
 
 I decided to use build flags to separate unit and integration test.
 
