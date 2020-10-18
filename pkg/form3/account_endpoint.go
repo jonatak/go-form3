@@ -19,18 +19,10 @@ type APIError struct {
 	StatusCode   int
 	ErrorCode    int    `json:"error_code"`
 	ErrorMessage string `json:"error_message"`
-	Err          error
 }
 
 func (a *APIError) Error() string {
-	if a.Err != nil {
-		return a.Err.Error()
-	}
 	return a.ErrorMessage
-}
-
-func (a *APIError) Unwrap() error {
-	return a.Err
 }
 
 func (ae *AccountEndpoint) doRequest(req *http.Request) (*http.Response, error) {
@@ -46,7 +38,7 @@ func (ae *AccountEndpoint) list(url string, pageSize int) (*AccountPageResponse,
 	)
 
 	if err != nil {
-		return nil, &APIError{Err: err}
+		return nil, err
 	}
 
 	if pageSize != 0 {
@@ -63,16 +55,24 @@ func (ae *AccountEndpoint) list(url string, pageSize int) (*AccountPageResponse,
 	switch resp.StatusCode {
 
 	case 200:
-		json.NewDecoder(resp.Body).Decode(&response)
+		err := json.NewDecoder(resp.Body).Decode(&response)
+		if err != nil {
+			return nil, err
+		}
 		return &response, nil
 	case 404:
-		return nil, nil
+		return nil, &APIError{
+			StatusCode: http.StatusNotFound,
+		}
 	default:
-		err := APIError{
+		apiErr := &APIError{
 			StatusCode: resp.StatusCode,
 		}
-		json.NewDecoder(resp.Body).Decode(&err)
-		return nil, &err
+		err := json.NewDecoder(resp.Body).Decode(&apiErr)
+		if err != nil {
+			return nil, err
+		}
+		return nil, apiErr
 	}
 }
 
@@ -94,17 +94,17 @@ func (ae *AccountEndpoint) Create(accountID string, ac *account.Account) (*Accou
 
 	jsonRQ, err := json.Marshal(request)
 	if err != nil {
-		return nil, &APIError{Err: err}
+		return nil, err
 	}
 
 	req, err := http.NewRequest("POST", fmt.Sprintf("%s/v1/organisation/accounts", ae.URL), bytes.NewBuffer(jsonRQ))
 	if err != nil {
-		return nil, &APIError{Err: err}
+		return nil, err
 	}
 
 	resp, err := ae.doRequest(req)
 	if err != nil {
-		return nil, &APIError{Err: err}
+		return nil, err
 	}
 
 	defer resp.Body.Close()
@@ -113,15 +113,21 @@ func (ae *AccountEndpoint) Create(accountID string, ac *account.Account) (*Accou
 
 	case 201:
 		response := AccountResponse{}
-		json.NewDecoder(resp.Body).Decode(&response)
+		err := json.NewDecoder(resp.Body).Decode(&response)
+		if err != nil {
+			return nil, err
+		}
 		return &response, nil
 
 	default:
-		err := APIError{
+		apiErr := &APIError{
 			StatusCode: resp.StatusCode,
 		}
-		json.NewDecoder(resp.Body).Decode(&err)
-		return nil, &err
+		err := json.NewDecoder(resp.Body).Decode(&apiErr)
+		if err != nil {
+			return nil, err
+		}
+		return nil, err
 	}
 }
 
@@ -131,7 +137,7 @@ func (ae *AccountEndpoint) Fetch(accountID string) (*AccountResponse, error) {
 
 	resp, err := http.Get(fmt.Sprintf("%s/v1/organisation/accounts/%s", ae.URL, accountID))
 	if err != nil {
-		return nil, &APIError{Err: err}
+		return nil, err
 	}
 
 	defer resp.Body.Close()
@@ -139,18 +145,25 @@ func (ae *AccountEndpoint) Fetch(accountID string) (*AccountResponse, error) {
 	response := AccountResponse{}
 
 	switch resp.StatusCode {
-
 	case 200:
-		json.NewDecoder(resp.Body).Decode(&response)
+		err := json.NewDecoder(resp.Body).Decode(&response)
+		if err != nil {
+			return nil, err
+		}
 		return &response, nil
 	case 404:
-		return nil, nil
+		return nil, &APIError{
+			StatusCode: http.StatusNotFound,
+		}
 	default:
-		err := APIError{
+		apiErr := &APIError{
 			StatusCode: resp.StatusCode,
 		}
-		json.NewDecoder(resp.Body).Decode(&err)
-		return nil, &err
+		err := json.NewDecoder(resp.Body).Decode(&apiErr)
+		if err != nil {
+			return nil, err
+		}
+		return nil, err
 	}
 }
 
@@ -163,7 +176,7 @@ func (ae *AccountEndpoint) Delete(accountID string, version int) (int, error) {
 		nil,
 	)
 	if err != nil {
-		return 0, &APIError{Err: err}
+		return 0, err
 	}
 
 	q := req.URL.Query()
@@ -172,7 +185,7 @@ func (ae *AccountEndpoint) Delete(accountID string, version int) (int, error) {
 	resp, err := ae.doRequest(req)
 
 	if err != nil {
-		return 0, &APIError{Err: err}
+		return 0, err
 	}
 
 	defer resp.Body.Close()
