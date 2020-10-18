@@ -90,6 +90,16 @@ func TestAccountValidation(t *testing.T) {
 		}
 		assertReturnedError(t, ar.IsValid(), nil)
 	})
+
+	t.Run("BIC with which isn't 8 or 11 char is invalid", func(t *testing.T) {
+		ar := &account.Account{
+			Country:      "FR",
+			BaseCurrency: "EUR",
+			BankID:       "1234567890a",
+			BIC:          "1111111",
+		}
+		assertReturnedError(t, ar.IsValid(), account.ErrFieldBICInvalidLength)
+	})
 }
 
 func TestClassificationTypeValidation(t *testing.T) {
