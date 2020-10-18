@@ -7,6 +7,7 @@ const (
 	httpContentType        = "application/vnd.api+json"
 )
 
+// I use this struct because I expect to have to reuse it (we should have more than one endpoint).
 type config struct {
 	URL            string
 	OrganisationID string
