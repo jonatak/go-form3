@@ -1,6 +1,9 @@
 package form3
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+)
 
 // List accounts.
 // This will return (nil, nil) in case the resources isn't found.
@@ -12,7 +15,9 @@ func (ae *AccountEndpoint) List(pageSize int) (*AccountPageResponse, error) {
 // Next return next page.
 func (ae *AccountEndpoint) Next(ap *AccountPageResponse) (*AccountPageResponse, error) {
 	if ap.Links.Next == "" {
-		return nil, nil
+		return nil, &APIError{
+			StatusCode: http.StatusNotFound,
+		}
 	}
 	resp, err := ae.list(fmt.Sprintf("%s/%s", ae.URL, ap.Links.Next), 0)
 	return resp, err
@@ -21,7 +26,9 @@ func (ae *AccountEndpoint) Next(ap *AccountPageResponse) (*AccountPageResponse, 
 // Prev return next page.
 func (ae *AccountEndpoint) Prev(ap *AccountPageResponse) (*AccountPageResponse, error) {
 	if ap.Links.Prev == "" {
-		return nil, nil
+		return nil, &APIError{
+			StatusCode: http.StatusNotFound,
+		}
 	}
 	resp, err := ae.list(fmt.Sprintf("%s/%s", ae.URL, ap.Links.Prev), 0)
 	return resp, err
@@ -30,7 +37,9 @@ func (ae *AccountEndpoint) Prev(ap *AccountPageResponse) (*AccountPageResponse, 
 // First return first page.
 func (ae *AccountEndpoint) First(ap *AccountPageResponse) (*AccountPageResponse, error) {
 	if ap.Links.First == "" {
-		return nil, nil
+		return nil, &APIError{
+			StatusCode: http.StatusNotFound,
+		}
 	}
 	resp, err := ae.list(fmt.Sprintf("%s/%s", ae.URL, ap.Links.First), 0)
 	return resp, err
@@ -39,7 +48,9 @@ func (ae *AccountEndpoint) First(ap *AccountPageResponse) (*AccountPageResponse,
 // Last return Last page.
 func (ae *AccountEndpoint) Last(ap *AccountPageResponse) (*AccountPageResponse, error) {
 	if ap.Links.Last == "" {
-		return nil, nil
+		return nil, &APIError{
+			StatusCode: http.StatusNotFound,
+		}
 	}
 	resp, err := ae.list(fmt.Sprintf("%s/%s", ae.URL, ap.Links.Last), 0)
 	return resp, err
