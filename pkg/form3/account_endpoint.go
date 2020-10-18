@@ -127,7 +127,7 @@ func (ae *AccountEndpoint) Create(accountID string, ac *account.Account) (*Accou
 		if err != nil {
 			return nil, err
 		}
-		return nil, err
+		return nil, apiErr
 	}
 }
 

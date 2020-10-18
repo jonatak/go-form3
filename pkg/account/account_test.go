@@ -34,6 +34,13 @@ func TestAccountValidation(t *testing.T) {
 		assertReturnedError(t, ar.IsValid(), nil)
 	})
 
+	t.Run("Account validation with valid country shouldn't return error but isn't in list of valid countries", func(t *testing.T) {
+		ar := &account.Account{
+			Country: "TT",
+		}
+		assertReturnedError(t, ar.IsValid(), nil)
+	})
+
 	t.Run("Base currency with more than 3 char should be invalid", func(t *testing.T) {
 		ar := &account.Account{
 			Country:      "FR",

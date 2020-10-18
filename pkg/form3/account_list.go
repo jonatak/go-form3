@@ -2,8 +2,15 @@ package form3
 
 import (
 	"fmt"
-	"net/http"
 )
+
+func (ae *AccountEndpoint) getPage(page string, ap *AccountPageResponse) (*AccountPageResponse, error) {
+	if page == "" {
+		return nil, nil
+	}
+	resp, err := ae.list(fmt.Sprintf("%s/%s", ae.URL, page), 0)
+	return resp, err
+}
 
 // List accounts.
 // This will return (nil, nil) in case the resources isn't found.
@@ -14,44 +21,20 @@ func (ae *AccountEndpoint) List(pageSize int) (*AccountPageResponse, error) {
 
 // Next return next page.
 func (ae *AccountEndpoint) Next(ap *AccountPageResponse) (*AccountPageResponse, error) {
-	if ap.Links.Next == "" {
-		return nil, &APIError{
-			StatusCode: http.StatusNotFound,
-		}
-	}
-	resp, err := ae.list(fmt.Sprintf("%s/%s", ae.URL, ap.Links.Next), 0)
-	return resp, err
+	return ae.getPage(ap.Links.Next, ap)
 }
 
 // Prev return next page.
 func (ae *AccountEndpoint) Prev(ap *AccountPageResponse) (*AccountPageResponse, error) {
-	if ap.Links.Prev == "" {
-		return nil, &APIError{
-			StatusCode: http.StatusNotFound,
-		}
-	}
-	resp, err := ae.list(fmt.Sprintf("%s/%s", ae.URL, ap.Links.Prev), 0)
-	return resp, err
+	return ae.getPage(ap.Links.Prev, ap)
 }
 
 // First return first page.
 func (ae *AccountEndpoint) First(ap *AccountPageResponse) (*AccountPageResponse, error) {
-	if ap.Links.First == "" {
-		return nil, &APIError{
-			StatusCode: http.StatusNotFound,
-		}
-	}
-	resp, err := ae.list(fmt.Sprintf("%s/%s", ae.URL, ap.Links.First), 0)
-	return resp, err
+	return ae.getPage(ap.Links.First, ap)
 }
 
 // Last return Last page.
 func (ae *AccountEndpoint) Last(ap *AccountPageResponse) (*AccountPageResponse, error) {
-	if ap.Links.Last == "" {
-		return nil, &APIError{
-			StatusCode: http.StatusNotFound,
-		}
-	}
-	resp, err := ae.list(fmt.Sprintf("%s/%s", ae.URL, ap.Links.Last), 0)
-	return resp, err
+	return ae.getPage(ap.Links.Last, ap)
 }
