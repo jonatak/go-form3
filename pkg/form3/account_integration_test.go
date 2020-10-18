@@ -1,9 +1,7 @@
-//+build integration
-//+build !unit
-
-package integration
+package form3_test
 
 import (
+	"errors"
 	"os"
 	"testing"
 
@@ -12,11 +10,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestEnvSetUP(t *testing.T) {
+func skipShortTest(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skipping integration test")
 	}
+}
 
+func TestEnvSetUP(t *testing.T) {
+
+	skipShortTest(t)
 	form3Endpoint := os.Getenv("FORM3_ENDPOINT")
 	form3OrdID := os.Getenv("FORM3_ORG_ID")
 
@@ -42,6 +44,8 @@ func getManyAccountID() []string {
 
 func TestCreateAccount(t *testing.T) {
 
+	skipShortTest(t)
+
 	form3Endpoint := os.Getenv("FORM3_ENDPOINT")
 	form3OrdID := os.Getenv("FORM3_ORG_ID")
 
@@ -64,6 +68,8 @@ func TestCreateAccount(t *testing.T) {
 }
 
 func TestFetchAccount(t *testing.T) {
+
+	skipShortTest(t)
 
 	form3Endpoint := os.Getenv("FORM3_ENDPOINT")
 	form3OrdID := os.Getenv("FORM3_ORG_ID")
@@ -88,6 +94,8 @@ func TestFetchAccount(t *testing.T) {
 
 func TestDeleteAccount(t *testing.T) {
 
+	skipShortTest(t)
+
 	form3Endpoint := os.Getenv("FORM3_ENDPOINT")
 	form3OrdID := os.Getenv("FORM3_ORG_ID")
 
@@ -102,6 +110,8 @@ func TestDeleteAccount(t *testing.T) {
 }
 
 func TestListAccount(t *testing.T) {
+
+	skipShortTest(t)
 
 	form3Endpoint := os.Getenv("FORM3_ENDPOINT")
 	form3OrdID := os.Getenv("FORM3_ORG_ID")
@@ -135,7 +145,20 @@ func TestListAccount(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, lastPage.Data[0].Attributes, account)
 
+	// nextPage doesn't exist check that Next return a 404
 	nextPage, err = client.Account.Next(lastPage)
-	assert.Nil(t, err)
+	errNotFound := &form3.APIError{}
+
+	// Make sure error is of type form3.APIError
+	assert.True(t, errors.As(err, &errNotFound))
+
+	// Make sure the APIError.StatusCode us 4
+	assert.Equal(t, 404, errNotFound.StatusCode)
 	assert.Nil(t, nextPage)
+
+	// loop over account
+	for response, err := client.Account.List(1); response != nil; response, err = client.Account.Next(response) {
+		assert.Nil(t, err)
+		assert.Equal(t, response.Data[0].Attributes, account)
+	}
 }
