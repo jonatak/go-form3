@@ -36,8 +36,9 @@ $ make unit-test
 ## Run Integration Test
 
 The integration test use docker and docker-compose.
+It will run integration and unit test.
 ```bash
-$ make integration-test
+$ make tests
 ```
 
 ## Usage
