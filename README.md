@@ -1,6 +1,6 @@
 # go-form3
 
-Go library for form3 api.
+Go library for form3 api (take home project).
 
 ## Tech decision
 
