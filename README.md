@@ -2,19 +2,6 @@
 
 Go library for form3 api.
 
-## Presentation
-
-- Submitter: __Jonathan Billaud__
-- Linkedin: https://www.linkedin.com/in/jonathanbillaud/
-
-## Go Experience
-
-I am new to golang. So far, I've done 4 projects with golang (5 counting this one):
-- A wrapper around python pip
-- A kafka message republisher with a RestApi
-- Plugins for a slack bot
-- A project using kafka goka to monitor kafka messages
-
 ## Tech decision
 
 I decided to stick with the standard library for unit and integration testing, I only included
